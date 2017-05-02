@@ -3,6 +3,8 @@ package com.example.a0stjal24.pointsofinterestapp;
 import android.app.Activity;
 import android.content.Intent;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,9 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -113,6 +118,30 @@ public class MainActivity extends AppCompatActivity
 
                     }
                 }
+
+        public boolean onOptionsItemSelected(MenuItem item)
+        {
+            String dir_path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            EditText et = (EditText) findViewById(R.id.nameEditText);
+            EditText et1 = (EditText) findViewById(R.id.typeEditText);
+            EditText et2 = (EditText) findViewById(R.id.descriptionEditText);
+
+            if (item.getItemId() == R.id.save) {
+
+                try {
+                    FileWriter fw = new FileWriter(dir_path + "/notes.txt");
+                    PrintWriter pw = new PrintWriter(fw);
+                    pw.println(et.getText());
+                    pw.flush();
+                    pw.close();
+                }
+                catch(IOException e){
+                    System.out.println("Error! " + e.getMessage());
+                }
+
+                return true;
+            }
+        }
 }
 
 
