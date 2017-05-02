@@ -2,12 +2,12 @@ package com.example.a0stjal24.pointsofinterestapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import org.osmdroid.config.Configuration;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         };
 
         items = new ItemizedIconOverlay<OverlayItem>(this, new ArrayList<OverlayItem>(), null);
-        mv.getOverlays().add(items);
+
     }
 
         public boolean onCreateOptionsMenu(Menu menu)
@@ -80,24 +80,40 @@ public class MainActivity extends AppCompatActivity
             return false;
         }
 
-        protected void onActivityResult(int requestCode,int resultCode,Intent intent)
+        protected void onActivityResult(int requestCode,int resultCode, Intent intent)
         {
             if(requestCode==0)
             {
-                if (requestCode==RESULT_OK)
-                {
-                    Bundle extras=intent.getExtras();
-                    boolean addpoi = extras.getBoolean("com.example.a0stjal24.pointofinterestapp");
-                    if(addpoi==true)
-                    {
-                        mv.setTileSource(TileSourceFactory.ADDPOI);
+
+
+                    Bundle bundle = intent.getExtras();
+
+                    String poiname = bundle.getString("com.example.a0stjal24.pointofinterestapp.name");
+                    String poitype = bundle.getString("com.example.a0stjal24.pointofinterestapp.type");
+                    String poidescription = bundle.getString("com.example.a0stjal24.pointofinterestapp.description");
+
+                    double latitude = mv.getMapCenter().getLatitude();
+                    double longitude = mv.getMapCenter().getLongitude();
+
+                    OverlayItem addpoi = new OverlayItem(poiname, poitype + poidescription, new GeoPoint(latitude, longitude));
+
+                   // this.listPOIs.add(new POIs(poiname, poitype, poidescription, latitude, longitude));
+
+                    items.addItem(addpoi);
+
+                    mv.getOverlays().add(items);
+
+                    mv.refreshDrawableState();
+
+                    Toast.makeText(MainActivity.this, "Marker added!", Toast.LENGTH_SHORT).show();
+
                     }
-                    else
+                    else if(requestCode == 1)
                     {
-                        mv.setTileSource(TileSourceFactory.MAPNIK);
+
                     }
                 }
-        }
-
-
 }
+
+
+
