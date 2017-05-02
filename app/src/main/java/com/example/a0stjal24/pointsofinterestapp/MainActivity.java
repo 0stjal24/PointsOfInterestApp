@@ -74,8 +74,31 @@ public class MainActivity extends AppCompatActivity
             inflater.inflate(R.menu.menu, menu);
             return true;
         }
+
         public boolean onOptionsItemSelected(MenuItem item)
         {
+            {
+                String dir_path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                EditText et = (EditText) findViewById(R.id.nameEditText);
+                EditText et1 = (EditText) findViewById(R.id.typeEditText);
+                EditText et2 = (EditText) findViewById(R.id.descriptionEditText);
+
+                if (item.getItemId() == R.id.save) {
+
+                    try {
+                        FileWriter fw = new FileWriter(dir_path + "/notes.txt");
+                        PrintWriter pw = new PrintWriter(fw);
+                        pw.println(et.getText());
+                        pw.flush();
+                        pw.close();
+                    }
+                    catch(IOException e){
+                        System.out.println("Error! " + e.getMessage());
+                    }
+
+                    return true;
+                }
+            }
             if(item.getItemId() == R.id.addpoi)
             {
                 Intent intent = new Intent(this,PoiAdd.class);
@@ -83,6 +106,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
             return false;
+
+
         }
 
         protected void onActivityResult(int requestCode,int resultCode, Intent intent)
@@ -119,29 +144,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
 
-        public boolean onOptionsItemSelected(MenuItem item)
-        {
-            String dir_path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            EditText et = (EditText) findViewById(R.id.nameEditText);
-            EditText et1 = (EditText) findViewById(R.id.typeEditText);
-            EditText et2 = (EditText) findViewById(R.id.descriptionEditText);
 
-            if (item.getItemId() == R.id.save) {
-
-                try {
-                    FileWriter fw = new FileWriter(dir_path + "/notes.txt");
-                    PrintWriter pw = new PrintWriter(fw);
-                    pw.println(et.getText());
-                    pw.flush();
-                    pw.close();
-                }
-                catch(IOException e){
-                    System.out.println("Error! " + e.getMessage());
-                }
-
-                return true;
-            }
-        }
 }
 
 
